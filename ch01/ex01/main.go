@@ -11,5 +11,10 @@ func main() {
 		s += sep + arg
 		sep = " "
 	}
+	fmt.Println(getCommandName())
 	fmt.Println(s)
+}
+
+func getCommandName() string {
+	return os.Args[0]
 }
