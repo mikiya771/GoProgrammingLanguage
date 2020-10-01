@@ -50,10 +50,10 @@ func (ilr IssuesListResult) PrintAsHTMLTable(w http.ResponseWriter) {
 	</tr>
 	{{range .Issues}}
 	<tr>
-	  <td><a href='issue/{{.Number}}'>{{.Number}}</a></td>
+	  <td>{{.Number}}</td>
 	  <td>{{.State}}</td>
 	  <td>{{.User.Login}}</td>
-	  <td><a href='issue/{{.Number}}'>{{.Title}}</a></td>
+	  <td>{{.Title}}</td>
 	</tr>
 	{{end}}
 	</table>

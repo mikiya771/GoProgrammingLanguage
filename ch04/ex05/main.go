@@ -4,8 +4,9 @@ import "fmt"
 
 func main() {
 	s := []int{3, 5, 7, 7, 1, 1, 1}
+	fmt.Println(s)
 	s = removeAdjacentDuplicateElement(s)
-	fmt.Print(s)
+	fmt.Println(s)
 }
 
 func removeAdjacentDuplicateElement(s []int) []int {

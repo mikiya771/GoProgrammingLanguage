@@ -44,7 +44,7 @@ func (mlr MilestonesListResult) PrintAsHTMLTable(w http.ResponseWriter) {
 	</tr>
 	{{range .Milestones}}
 	<tr>
-	  <td><a href='milestone/{{.Title}}'>{{.Title}}</a></td>
+	  <td>{{.Title}}</td>
 	  <td>{{.State}}</td>
 	</tr>
 	{{end}}
