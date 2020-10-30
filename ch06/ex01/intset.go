@@ -37,9 +37,10 @@ func (s *IntSet) IntersectWith(t *IntSet) {
 	for i, tword := range t.words {
 		if i < len(s.words) {
 			s.words[i] &= tword
-		} else {
-			s.words = append(s.words, 0)
 		}
+	}
+	for i := len(t.words); i < len(s.words); i++ {
+		s.words[i] = 0
 	}
 }
 func (s *IntSet) SymmetricDifference(t *IntSet) {
@@ -115,12 +116,12 @@ func (s *IntSet) Clear() {
 }
 
 func (s *IntSet) Copy() *IntSet {
-	t := []uint64{}
-	_ = copy(t, s.words)
-	n := &IntSet{
-		words: t,
-	}
-	return n
+	var c IntSet
+
+	c.words = make([]uint64, len(s.words))
+	copy(c.words, s.words)
+
+	return &c
 }
 
 func (s *IntSet) AddAll(vals ...int) {
