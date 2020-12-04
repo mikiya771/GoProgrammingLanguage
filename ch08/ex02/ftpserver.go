@@ -56,15 +56,6 @@ func handleConn(c net.Conn, ftpSender net.Listener) {
 		log.Println(str)
 		cmds := strings.Split(str, " ")
 		switch cmds[0] {
-		case "ABOR":
-			log.Print("")
-		case "ACCT":
-		case "ALLO":
-			log.Print("")
-		case "APPE":
-			log.Print("")
-		case "CDUP":
-			log.Print("")
 		case "CWD":
 			os.Chdir(workingdir)
 			err := os.Chdir(cmds[1])
@@ -78,8 +69,6 @@ func handleConn(c net.Conn, ftpSender net.Listener) {
 				break
 			}
 			c.Write([]byte("250\n"))
-		case "DELE":
-			log.Print("")
 		case "HELP":
 			log.Print("nyasu")
 		case "LIST":
@@ -104,14 +93,6 @@ func handleConn(c net.Conn, ftpSender net.Listener) {
 			}
 			sc.Close()
 			c.Write([]byte("226\n"))
-		case "MKD":
-			log.Print("")
-		case "NLST":
-			log.Print("")
-		case "NOOP":
-			log.Print("nyasu")
-		case "MODE":
-			log.Print("")
 		case "USER":
 			log.Print(cmds)
 			_, err = c.Write([]byte("331\n"))
@@ -140,8 +121,6 @@ func handleConn(c net.Conn, ftpSender net.Listener) {
 
 		case "QUIT":
 			c.Write([]byte("221 bye\n"))
-		case "REIN":
-			log.Print("")
 		case "RETR":
 			c.Write([]byte("125\n"))
 			os.Chdir(workingdir)
@@ -155,14 +134,6 @@ func handleConn(c net.Conn, ftpSender net.Listener) {
 			sc.Close()
 			c.Write([]byte("226\n"))
 
-		case "RNTO":
-			log.Print("")
-		case "SITE":
-			log.Print("")
-		case "SMNT":
-			log.Print("")
-		case "STAT":
-			log.Print("")
 		case "STOR":
 			c.Write([]byte("125\n"))
 			os.Chdir(workingdir)
@@ -174,10 +145,6 @@ func handleConn(c net.Conn, ftpSender net.Listener) {
 			io.Copy(f, sc)
 			sc.Close()
 			c.Write([]byte("226\n"))
-		case "STOU":
-			log.Print("")
-		case "STRU":
-			log.Print("")
 		case "FEAT", "PASV", "LPRT", "LPSV":
 			c.Write([]byte("502\n"))
 		case "SYST":
