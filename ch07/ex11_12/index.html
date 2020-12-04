@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>test http</title>
+</head>
+<body>
+	<ul>
+		{{range $key, $value := .Values}}
+		<li>
+			<form action="?" method="POST">	
+				金額:<input type="text" value="{{$key}}" name="name" readonly>
+				金額:<input type="text" value="{{$value}}" name="value">
+				<button type="submit" formaction="/update">更新</button>
+				<button type="submit" formaction="/delete">削除</button>
+			</form>
+		</li> 
+		{{end}}
+	</ul>
+	<form action="/update" method="POST">	
+		商品名:<input type="text" value= "{{.Key}}" name="name">
+		金額:<input type="text" value="{{.Value}}" name="value">
+	    <input type="submit" value="作成">
+	</form>
+</body>
+</html>

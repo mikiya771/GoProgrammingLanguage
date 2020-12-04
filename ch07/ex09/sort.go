@@ -18,7 +18,7 @@ func (ms *multikeySortTracks) Less(i, j int) bool {
 		if less(ms.tracks[i], ms.tracks[j]) {
 			return true
 		}
-		if less(ms.tracks[i], ms.tracks[j]) {
+		if less(ms.tracks[j], ms.tracks[i]) {
 			return false
 		}
 	}
