@@ -117,7 +117,7 @@ func handleConn(c net.Conn, ftpSender net.Listener) {
 				sc.Close()
 			}
 		case "PWD", "XPWD":
-			c.Write([]byte(fmt.Sprintf("257 %s\n", workingdir)))
+			c.Write([]byte(fmt.Sprintf("257 \"%s\" is the current directory\n", workingdir)))
 
 		case "QUIT":
 			c.Write([]byte("221 bye\n"))
