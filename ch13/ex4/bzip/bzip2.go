@@ -1,0 +1,92 @@
+package main
+
+import (
+	"io"
+	"log"
+	"os"
+	"os/exec"
+	"sync"
+)
+
+func main() {
+	w, err := NewWriter(os.Stdout)
+	if err != nil {
+		log.Fatalf("bzipper: %v \n", err)
+	}
+	if _, err := io.Copy(w, os.Stdin); err != nil {
+		log.Fatalf("bzipper: %v \n", err)
+	}
+	if err := w.Close(); err != nil {
+		log.Fatalf("bzipper: close %v \n", err)
+
+	}
+}
+
+type writer struct {
+	w   io.WriteCloser
+	m   sync.Mutex
+	wg  sync.WaitGroup
+	cmd *exec.Cmd
+}
+
+// NewWriter returns a writer for bzip2-compressed streams.
+func NewWriter(out io.Writer) (io.WriteCloser, error) {
+	var w writer
+	w.cmd = exec.Command("/usr/bin/bzip2")
+	stdout, err := w.cmd.StdoutPipe()
+	if err != nil {
+		return nil, err
+	}
+	stdin, err := w.cmd.StdinPipe()
+	if err != nil {
+		return nil, err
+	}
+	w.w = stdin
+	if err := w.cmd.Start(); err != nil {
+		return nil, err
+	}
+	w.wg.Add(1)
+	go func() {
+		io.Copy(out, stdout)
+		w.wg.Done()
+	}()
+	return &w, nil
+}
+
+//!-
+
+//!+write
+func (w *writer) Write(data []byte) (int, error) {
+	w.m.Lock()
+	defer w.m.Unlock()
+	var total int // uncompressed bytes written
+
+	for len(data) > 0 {
+		n, err := w.w.Write(data)
+		if err != nil {
+			return total + n, err
+		}
+		total += n
+		data = data[total:]
+	}
+	return total, nil
+}
+
+//!-write
+
+//!+close
+// Close flushes the compressed data and closes the stream.
+// It does not close the underlying io.Writer.
+func (w *writer) Close() error {
+	w.m.Lock()
+	defer w.m.Unlock()
+	w.w.Close()
+	w.wg.Wait()
+	err := w.cmd.Wait()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+//!-close
