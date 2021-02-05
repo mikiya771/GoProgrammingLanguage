@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"reflect"
 	"unsafe"
 )
@@ -9,14 +10,26 @@ type comparison struct {
 	x, y unsafe.Pointer
 	t    reflect.Type
 }
+type cyclicType struct {
+	c *cyclicType
+}
 
 func Equal(x, y interface{}) bool {
 	seen := make(map[comparison]bool)
 	return equal(reflect.ValueOf(x), reflect.ValueOf(y), seen)
 }
+func main() {
+	fmt.Printf("require false, actual %t \n", Equal(1.9, 2.0))
+	fmt.Printf("require true, actual %t \n", Equal(2.0, 2.0))
+	fmt.Printf("require false, actual %t \n", Equal(2.0, 2+1e-9))
+	fmt.Printf("require true, actual %t \n", Equal(2.0, 2+1e-11))
+	fmt.Printf("require true, actual %t \n", Equal(complex(1, 1), complex(1, 1)))
+	fmt.Printf("require true, actual %t \n", Equal(complex(1, 1+1e-11), complex(1, 1)))
+	fmt.Printf("require false, actual %t \n", Equal(complex(1, 1+1e-8), complex(1, 1)))
+}
 
 func equal(x, y reflect.Value, seen map[comparison]bool) bool {
-	if !x.IsValid() || y.IsValid() {
+	if !x.IsValid() || !y.IsValid() {
 		return x.IsValid() == y.IsValid()
 	}
 	if x.Type() != y.Type() {
